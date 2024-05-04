@@ -59,6 +59,7 @@ class ApiController extends Controller
                 'book_date' => $booking['booking']['book_date'],
             ];
 
+            $ahassFound = false;
             foreach ($data2['data'] as $ahass) {
                 if ($booking['booking']['workshop']['code'] === $ahass['code']) {
                     $recordData['ahass_code'] = $ahass['code'];
@@ -66,8 +67,19 @@ class ApiController extends Controller
                     $recordData['ahass_address'] = $ahass['address'];
                     $recordData['ahass_contact'] = $ahass['phone_number'];
                     $recordData['ahass_distance'] = $ahass['distance'];
+                    $ahassFound = true;
                     break;
                 }
+            }
+
+            if (!$ahassFound) {
+                $recordData += [
+                    'ahass_code' => null,
+                    'ahass_name' => '',
+                    'ahass_address' => '',
+                    'ahass_contact' => '',
+                    'ahass_distance' => 0,
+                ];
             }
 
             $recordData['motorcycle_ut_code'] = $booking['booking']['motorcycle']['ut_code'];
@@ -86,25 +98,17 @@ class ApiController extends Controller
 
         return $jsonResult;
     }
+
     public function sortDataByDistance($jsonResult)
     {
         $result = json_decode($jsonResult, true);
-
         $data = $result['data'];
 
-        foreach ($data as $record) {
-            if (isset($record['ahass_distance'])) {
-                $record['ahass_distance'] = (float) $record['ahass_distance'];
-            }
-        }
-
         usort($data, function ($a, $b) {
-            if (isset($a['ahass_distance']) && isset($b['ahass_distance'])) {
-                return $a['ahass_distance'] <=> $b['ahass_distance'];
-            }
-            return 0;
+            return $a['ahass_distance'] <=> $b['ahass_distance'];
         });
 
+        $result['data'] = $data;
         $sortedJsonResult = json_encode($result);
         return $sortedJsonResult;
     }
@@ -114,5 +118,5 @@ class ApiController extends Controller
         $jsonResult = $this->manipulateJson();
         $sortedJsonResult = $this->sortDataByDistance($jsonResult);
         return $sortedJsonResult;
-    } 
+    }
 }
