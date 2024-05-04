@@ -6,13 +6,12 @@ This guide provides step-by-step instructions for installing Laravel, a popular 
 
 Before you begin, ensure you have the following installed:
 
-- PHP (recommended version: 7.3 or higher)
+- PHP (recommended version: 8.2 or higher)
 - Composer
-- Node.js and npm (optional, for frontend assets)
 
 ## Installation Steps
 
-### Step 1: Install Laravel
+### Step 1: Install Project
 First, you need to install the Laravel Installer globally using Composer:
 
 ```bash
@@ -20,7 +19,7 @@ composer install
 ```
 
 
-### Endpoint
+# Endpoint
 ## Manipulate the json files 
 
 ```bash
